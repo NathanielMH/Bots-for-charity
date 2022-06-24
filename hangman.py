@@ -26,10 +26,9 @@ class Hangman:
             self._letters_used[c] = 1
             if c in self._secret_word:
                 self._progress = update_word(self._secret_word, self._progress, c)
-                return "Correct! This letter is inside the word. " + self._progress + "\n" + self.end()
+                return "Correct! This letter is inside the word. " + "\n" + self.end()
             else:
                 self._misses += 1
-
                 return "That letter is not inside the word!" + "\n" + self._hangman[
                                                                       :2 * self._misses] + "\n" + self.end()
 
@@ -39,7 +38,9 @@ class Hangman:
         elif self._progress == self._secret_word:
             return "Victory! You uncovered the secret word. Congratulations!"
         else:
-            return "Keep going!"
+            return "Keep going! " + self._progress
 
     def game_over(self) -> bool:
         return self._misses == 7 or self._progress == self._secret_word
+
+# Create a set of words from which you choose one randomly at each game.
