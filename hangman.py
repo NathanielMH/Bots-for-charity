@@ -1,7 +1,16 @@
 from typing import Dict, List
 
 
-def update_word(secret_word: str, progress: str, c):
+def scattered_word(s: str) -> str:
+    new = ""
+    for i in range(len(s)):
+        new += s[i]
+        if i != len(s) - 1:
+            new += " "
+    return new
+
+
+def update_word(secret_word: str, progress: str, c) -> str:
     new_progress = progress
     for i in range(len(secret_word)):
         if secret_word[i] == c:
@@ -16,6 +25,7 @@ class Hangman:
         self._progress: str = "_" * len(self._secret_word)
         self._letters_used: Dict[str, int] = {}
         self._hangman = "H A N G M A N "
+        self._finished = False
 
     def play(self, c) -> str:
         if len(c) != 1:
@@ -34,13 +44,16 @@ class Hangman:
 
     def end(self):
         if self._misses == 7:
-            return "Game over! The word you were looking for is " + self._secret_word + ". Better luck next time!"
+            self._finished = True
+            return "Game over! The word you were looking for is: " + self._secret_word + ". Better luck next time!"
         elif self._progress == self._secret_word:
-            return "Victory! You uncovered the secret word. Congratulations!"
+            self._finished = True
+            return "Victory! You uncovered the secret word: " + self._secret_word + ". Congratulations!"
         else:
-            return "Keep going! " + self._progress
+            return "Keep going! " + scattered_word(self._progress)
 
     def game_over(self) -> bool:
+        self._finished = True
         return self._misses == 7 or self._progress == self._secret_word
 
 # Create a set of words from which you choose one randomly at each game.
