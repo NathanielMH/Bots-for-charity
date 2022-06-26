@@ -154,10 +154,14 @@ def story(update, context):
                 context.user_data['story'] = context.user_data['story'].left
                 if context.user_data['story'] is not None:
                     context.bot.send_message(chat_id=update.effective_chat.id, text=context.user_data['story'].story)
+                if context.user_data['story'].left is None:
+                    context.user_data['story'] = None
             elif decision == 'R':
                 context.user_data['story'] = context.user_data['story'].right
                 if context.user_data['story'] is not None:
                     context.bot.send_message(chat_id=update.effective_chat.id, text=context.user_data['story'].story)
+                if context.user_data['story'].left is None:
+                    context.user_data['story'] = None
             else:
                 context.bot.send_message(chat_id=update.effective_chat.id, text="Please select a valid decision!")
 
