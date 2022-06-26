@@ -1,5 +1,4 @@
 import random
-from typing import Dict
 from time import time
 
 operators = {0: '+', 1: '-', 2: '*', 3: '//'}
