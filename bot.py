@@ -33,7 +33,8 @@ def start(update, context) -> None:
 
 def help(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="Here are my commands: \n To play Hangman, first type the /hangman command to start "
+                             text="Here are my commands: \n \n To play Hangman, first type the /hangman command to "
+                                  "start "
                                   "the game. \n Then, to guess a letter type the /hangman command and type the letter "
                                   "afterwards. \n \n To play the math game, first type /math with your level (1-3). \n "
                                   "Then type /math to receive a question, and after you receive it type /answer "
@@ -41,7 +42,7 @@ def help(update, context):
                                   "/story "
                                   "to see the stories available. Then type /story followed by the title of the story "
                                   "you would like to experience. To make a decision, type /story followed by either "
-                                  "L or R depending on what you want to do. \n Have fun!")
+                                  "L or R depending on what you want to do. \n \n Have fun!")
 
 
 def result(op1: int, op: str, op2: int):

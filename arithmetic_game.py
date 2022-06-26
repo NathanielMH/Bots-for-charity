@@ -1,4 +1,4 @@
-import random
+from random import randint
 from time import time
 
 operators = {0: '+', 1: '-', 2: '*', 3: '//'}
@@ -6,9 +6,9 @@ levels = {1: 10, 2: 20, 3: 40, 4: 80}
 
 
 def generate_and_check(level: int) -> bool:
-    op1 = random.randint(0, levels[level])
-    op2 = random.randint(0, levels[level])
-    op_num = random.randint(0, 3)
+    op1 = randint(0, levels[level])
+    op2 = randint(0, levels[level])
+    op_num = randint(0, 3)
     op = operators[op_num]
     print(op1, op, op2)
     result = int(input("Result:"))
