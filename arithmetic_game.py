@@ -6,7 +6,7 @@ operators = {0: '+', 1: '-', 2: '*', 3: '//'}
 levels = {1: 10, 2: 20, 3: 40, 4: 80}
 
 
-def generate_and_check(level: int, levels: Dict, operators: Dict) -> bool:
+def generate_and_check(level: int) -> bool:
     op1 = random.randint(0, levels[level])
     op2 = random.randint(0, levels[level])
     op_num = random.randint(0, 3)
@@ -24,11 +24,11 @@ def generate_and_check(level: int, levels: Dict, operators: Dict) -> bool:
 
 
 # Make list and give final score like a test.
-def length_game(k: int, levels: Dict, operators: Dict):
+def length_game(k: int):
     streak = 0
     n = int(input("Input your level:"))
     for i in range(k):
-        streak += generate_and_check(n, levels, operators)
+        streak += generate_and_check(n)
     print("Great job! You have a streak of " + str(streak) + " correct answers!")
 
 
@@ -37,7 +37,7 @@ def speed_game(k: int):
     t = time()
     s = 0
     n = int(input("Input your level:"))
-    while generate_and_check(n, l, o) and s < k:
+    while generate_and_check(n) and s < k:
         s += 1
         print("Great job! Keep going, only " + str(k - s) + " to go!")
     if s == k:
