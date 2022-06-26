@@ -2,8 +2,8 @@ import random
 from typing import Dict
 from time import time
 
-o = {0: '+', 1: '-', 2: '*', 3: '//'}
-l = {1: 10, 2: 20, 3: 40, 4: 80}
+operators = {0: '+', 1: '-', 2: '*', 3: '//'}
+levels = {1: 10, 2: 20, 3: 40, 4: 80}
 
 
 def generate_and_check(level: int, levels: Dict, operators: Dict) -> bool:
@@ -43,6 +43,3 @@ def speed_game(k: int):
     if s == k:
         tf = time()
         print("Great job! You answered " + str(k) + " questions correctly in " + str(int(tf - t)) + " seconds.")
-
-
-length_game(10, l, o)
