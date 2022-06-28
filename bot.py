@@ -16,7 +16,8 @@ def random_word() -> str:
              'radio', 'python', 'bot', 'tomato', 'soup', 'car', 'race', 'laser', 'microphone', 'sneakers', 'movement',
              'money', 'pace', 'maze', 'blaze', 'mouse', 'cube', 'circle', 'mountain', 'computer', 'cockpit', 'key',
              'can',
-             'trash']
+             'trash', 'neuron', 'heist', 'home', 'hijack', 'sumo', 'sum', 'crumble', 'cookie', 'chalk', 'board', 'boa',
+             'tiger', 'elephant', 'dog', 'hog', 'rider', 'tent', 'lake', 'world', 'video', 'picture', 'heist', 'mind']
     w = random.randint(0, len(words) - 1)
     return words[w]
 
