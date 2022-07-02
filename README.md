@@ -12,5 +12,8 @@ Tells the beginning of a story that is designed to have different outcomes, and 
 ## Arithmetic game "/math"
 Given a user level, it asks a series of arithmetic questions that the user can answer using the /answer command. Implementation using the random module.
 
+## Battlship game /battlship
+Plays a famous battlship game against the user, unfinished.
+
 ## PS
 Please let me know if you have any suggestions for me to improve on my bot! Also, if you would like to provide a story for the interactive story module, please send your recommendation to my email, I will gladly accept suggestions.
