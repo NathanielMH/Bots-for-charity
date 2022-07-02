@@ -4,6 +4,8 @@ import random
 from arithmetic_game import operators, levels
 from interactive_story_test import titles_list, titles_to_story
 
+b_size = [2, 3, 3, 4, 5]
+
 
 def random_word() -> str:
     words = ['sauce', 'avocado', 'robot', 'house', 'family', 'happy', 'honor', 'dog', 'water', 'patience', 'glass',
@@ -17,19 +19,33 @@ def random_word() -> str:
              'money', 'pace', 'maze', 'blaze', 'mouse', 'cube', 'circle', 'mountain', 'computer', 'cockpit', 'key',
              'can',
              'trash', 'neuron', 'heist', 'home', 'hijack', 'sumo', 'sum', 'crumble', 'cookie', 'chalk', 'board', 'boa',
-             'tiger', 'elephant', 'dog', 'hog', 'rider', 'tent', 'lake', 'world', 'video', 'picture', 'heist', 'mind']
+             'tiger', 'elephant', 'dog', 'hog', 'rider', 'tent', 'lake', 'world', 'video', 'picture', 'heist', 'mind'
+                                                                                                               'color',
+             'fright', 'fry', 'deep', 'money', 'constant', 'trolley', 'trousers', 'shirt', 'bin', 'keyboard']
     w = random.randint(0, len(words) - 1)
     return words[w]
 
 
 def start(update, context) -> None:
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="Hello! I am your telegram bot. Let's play!")
+                             text="Hello! I am your telegram bot. Let's play! 😃")
+    # Hangman
     context.user_data['hangman'] = None
+    # Math
     context.user_data['math_streak'] = 0
     context.user_data['math'] = None
     context.user_data['level'] = None
+    # Story
     context.user_data['story'] = None
+    # Battleship
+    context.user_data['grid'] = None
+    context.user_data['grid_id'] = None
+    context.user_data['id'] = None
+    context.user_data['lives'] = None
+    context.user_data['e_grid'] = None
+    context.user_data['e_grid_id'] = None
+    context.user_data['e_id'] = None
+    context.user_data['e_lives'] = None
 
 
 def help(update, context):
@@ -55,6 +71,143 @@ def result(op1: int, op: str, op2: int):
         return op1 * op2
     else:
         return op1 // op2
+
+
+def start_battleship(update, context):
+    context.user_data['grid'] = [["🌊" for i in range(10)] for i in range(10)]
+    context.user_data['grid_id'] = [[-1 for i in range(10)] for i in range(10)]
+    context.user_data['id'] = 0
+    context.user_data['lives'] = [2, 3, 3, 4, 5]
+    context.user_data['e_grid'] = [["🌊" for i in range(10)] for i in range(10)]
+    context.user_data['e_grid_id'] = [[-1 for i in range(10)] for i in range(10)]
+    context.user_data['e_id'] = 0
+    context.user_data['e_lives'] = [2, 3, 3, 4, 5]
+
+
+def battleship(update, context):
+    try:
+        start_battleship(update, context)
+    except Exception as e:
+        print(e)
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Oops. Something went wrong. Please restart "
+                                                                        "the bot!")
+
+
+def new_boat(update, context):
+    boat_size = [2, 3, 3, 4, 5]
+    boat_num = context.user_data['id']
+    k = boat_size[boat_num]
+    orientation = context.args[0]
+    x = int(context.args[1])
+    y = int(context.args[2])
+    try:
+        if orientation not in ['H', 'V']:
+            context.bot.send_message(chat_id=update.effective_chat.id, text="Error orientation")
+        elif x + k > 10 and orientation == "V":
+            context.bot.send_message(chat_id=update.effective_chat.id, text="Error size")
+        elif y + k > 10 and orientation == "H":
+            context.bot.send_message(chat_id=update.effective_chat.id, text="Error size")
+        else:
+            if orientation == 'HOR':
+                for j in range(k):
+                    if context.user_data['grid'][x][y + j] == "🛥️":
+                        context.bot.send_message(chat_id=update.effective_chat.id, text="Error occupied")
+                    context.user_data['grid'][x][y + j] = "🛥️"
+                    context.user_data['grid_id'][x][y + j] = context.user_data['id']
+                    context.user_data['e_grid'][x + j][y] = "🛥️"
+                    context.user_data['e_grid_id'][x + j][y] = context.user_data['e_id']
+
+            else:
+                for j in range(k):
+                    if context.user_data['grid'][x + j][y] == "🛥️":
+                        context.bot.send_message(chat_id=update.effective_chat.id, text="Error occupied")
+                    context.user_data['grid'][x + j][y] = "🛥️"
+                    context.user_data['grid_id'][x + j][y] = context.user_data['id']
+                    context.user_data['e_grid'][x][y + j] = "🛥️"
+                    context.user_data['e_grid_id'][x][y + j] = context.user_data['e_id']
+        context.user_data['id'] += 1
+        context.user_data['e_id'] += 1
+    except Exception as e:
+        print(e)
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Oops. Something went wrong. Check that you "
+                                                                        "are not adding an extra boat nad restart the "
+                                                                        "bot.")
+
+
+def move(y, x, context, update) -> str:
+    try:
+        if x > 9 or y > 9:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="Error! Wrong position")
+        elif context.user_data['grid'][x][y] == "🛥️":
+            context.user_data['grid'][x][y] = "💥"
+            context.user_data['lives'][context.user_data['grid_id'][x][y]] -= 1
+            if context.user_data['lives'][context.user_data['grid_id'][x][y]] == 0:
+                return "SUNK"
+            else:
+                return "HIT"
+        else:
+            return "MISS"
+    except Exception as e:
+        print(e)
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Oops. Something went wrong. Please restart "
+                                                                        "the bot!")
+
+
+def move_enemy(x, y, context, update):
+    if context.user_data['e_grid'][x][y] == "🛥️":
+        context.user_data['e_grid'][x][y] = "💥"
+        context.user_data['e_lives'][context.user_data['e_grid_id'][x][y]] -= 1
+        if context.user_data['e_lives'][context.user_data['e_grid_id'][x][y]] == 0:
+            return "SUNK"
+        else:
+            return "HIT"
+    else:
+        return "MISS"
+
+
+def get_attacked(update, context):
+    try:
+        x = random.randint(0, 9)
+        y = random.randint(0, 9)
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Enemy attacks " + str(x) + str(y))
+        m = "HIT"
+        while m == "HIT" or m == "SUNK":
+            m = move_enemy(x, y, context, update)
+            if context.user_data['e_lives'] == [0, 0, 0, 0, 0]:
+                context.bot.send_message(chat_id=update.effective_chat.id,
+                                         text="You lose!")
+                return "L"
+            else:
+                context.bot.send_message(chat_id=update.effective_chat.id,
+                                         text="Enemy" + m)
+    except Exception as e:
+        print(e)
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Oops. Something went wrong. Please restart "
+                                                                        "the bot!")
+
+
+def attack(update, context):
+    try:
+        x = int(context.args[0])
+        y = int(context.args[1])
+        if get_attacked(update, context) == "L":
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="You lost!")
+        m = "HIT"
+        while m == "HIT" or m == "SUNK":
+            m = move(x, y, context, update)
+            if context.user_data['lives'] == [0, 0, 0, 0, 0]:
+                context.bot.send_message(chat_id=update.effective_chat.id,
+                                         text="You win!")
+            else:
+                context.bot.send_message(chat_id=update.effective_chat.id,
+                                         text=m)
+
+    except Exception as e:
+        print(e)
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Oops. Something went wrong. Please restart "
+                                                                        "the bot!")
 
 
 def play(update, context, h: Hangman):
@@ -186,6 +339,7 @@ dispatcher.add_handler(CommandHandler('hangman', hangman))
 dispatcher.add_handler(CommandHandler('math', math))
 dispatcher.add_handler(CommandHandler('answer', answer))
 dispatcher.add_handler(CommandHandler('story', story))
+dispatcher.add_handler(CommandHandler('battleship', battleship))
 
 # starts the bot
 updater.start_polling()
